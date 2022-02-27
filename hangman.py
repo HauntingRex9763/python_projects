@@ -22,7 +22,7 @@ class App(tk.Frame):
         display_word = []
         for i in range(0, len(selected_word)):
             display_word.append('_')
-            
+
         button_building(self, letter, strikes, max_strikes, selected_word, display_word, alphabet)
         
     def button_building(self, letter, strikes, max_strikes, selected_word, display_word, alphabet):
@@ -68,8 +68,8 @@ class App(tk.Frame):
             selected_word[letter_loc] = '_'
         print(letter)
 
-        def end_game():
-            pass
+    def end_game():
+        pass
 
     
 
