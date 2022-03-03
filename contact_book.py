@@ -6,7 +6,6 @@ import tkinter as tk, openpyxl
     email # Row 4
     phone # Row 5
     Birthday (Y,M,D) # Row 6, 7, 8
-    image # Row 9
     '''
 def make_entry(r, c):
     var = tk.IntVar()
@@ -30,26 +29,24 @@ def make_label(_text, r, c):
         column = c
     )
 
+def create_button(_text, cmd, r, c):
+    button = tk.Button( # Button Setup
+        window,
+        text = _text,
+        width = 15,
+        height = 2,
+        bg = "green",
+        fg = "yellow",
+        borderwidth = 3,
+        compound = tk.CENTER,
+        command = cmd
+    ); button.grid( # Button Placement
+        row = r, 
+        column = c
+    ); return(button)
+
 def main_1():
     for widget in window.winfo_children():  widget.destroy() # Clear widgets  
-    
-
-    def create_button(_text, cmd, r, c):
-        button = tk.Button( # Button Setup
-            window,
-            text = _text,
-            width = 15,
-            height = 2,
-            bg = "green",
-            fg = "yellow",
-            borderwidth = 3,
-            compound = tk.CENTER,
-            command = cmd
-        ); button.grid( # Button Placement
-            row = r, 
-            column = c
-        ); return(button)
-
     def main_1_A():
         for widget in window.winfo_children():  widget.destroy() # Clear widgets  
         make_label('Enter contact email.\nPress enter to continue.', 1, 2) # Post label  
@@ -66,30 +63,28 @@ def main_1():
 
     def main_1_B():
         for widget in window.winfo_children():  widget.destroy() # Clear widgets
-        contacts = 'Here is all submitted contact information.\n' # Gets contacts
+        make_label('Here is all submitted contact information.', 1, 1); R = 2 # Gets contacts
         for r in range(2, ws.max_row+1):
+            contact = []; R +=1
             for c in range(1, 10):
-                contacts += '{} : {}; '.format(ws.cell(row=1, column=c).value, ws.cell(row=r, column=c).value)
-            contacts += '\n'
-        contacts += '\nPress enter to return to main page.'
-        make_label(contacts, 1, 1) # Post contacts
-        window.bind('<Return>', lambda event: main_1()) # Bind enter to entry get_func
+                cell = ws.cell(row=r, column=c).value
+                contact += '{}; '.format(cell)
+            make_label(contact, r, 1)
+        make_label('Press enter to return to main page.', R, 1)
+        window.bind('<Return>', lambda event: main_1()) # Bind enter to main
 
     def main_1_C():
         for widget in window.winfo_children():  widget.destroy() # Clear widgets    
         make_label('Enter email.\nPress enter to continue.', 1, 2) # Posts label
         entry = make_entry(1, 1) # Gets email
 
-        ws['J1'] = entry # Add email to sheet
+        ws['I1'] = entry # Add email to sheet
         make_label('Email: {} added.\nPress enter to continue.'.format(entry), 1, 2) # Post label
         window.bind('<Return>', lambda event: main_1()) # Bind enter to main func
         
     def main_1_D():
-        try:  
-            wb.save(filename = 'contact_book.xlsx')
-            window.quit()
-        except Exception as e:
-            print(e)
+        wb.save(filename = 'contact_book.xlsx')
+        window.quit()
 
     add_button = create_button('Add contact', first_name_1, 1, 1)
 
@@ -148,23 +143,12 @@ def birth_day_1(): # First
     make_label('Enter birth day.\nPress enter to continue.', 1, 2) # Post label
     entry = make_entry(1, 1) # Get day
     ws['H'+str(ws.max_row)] = int(entry) # Add day
-    image_1() # Next
-
-def image_1(): 
-    make_label('Enter image path.\nPress enter to continue.', 1, 2) # Post label  
-    entry = make_entry(1, 1) # Get image path
-
-    image = openpyxl.drawing.image.Image(entry) # Get image
-    image.height = 20
-    image.width = 72
-    image.anchor = ''+str(ws.max_row) # Attach to cell
-    ws.add_image(image) # Add
     results_1() # Next
 
 def results_1():
     contact = 'Here is submitted conact info.\n' # Get contact
     for i in range(1, ws.max_column-1): 
-        contact += '{}\n'.format(ws.cell(row=ws.max_row, column=i).value)
+        contact += '{}\n'.format(ws.cell(row = ws.max_row, column = i).value)
     contact += '\nPress enter to return to main page.'
     make_label(contact, 1, 1) # Post label
     window.bind('<Return>', lambda event: main_1()) # Bind enter to entry get_func
