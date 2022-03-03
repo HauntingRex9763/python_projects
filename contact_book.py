@@ -89,7 +89,7 @@ def main_1():
             wb.save(filename = 'contact_book.xlsx')
             window.quit()
         except Exception as e:
-            print("OPENPYXL IS A PIECE OF SHIT\n",e)
+            print(e)
 
     add_button = create_button('Add contact', first_name_1, 1, 1)
 
